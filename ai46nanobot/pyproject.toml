@@ -20,9 +20,11 @@ dependencies = [
     "rich",
 ]
 
+# 安装后生成终端命令：敲 mini-nanobot 时，调用 mini_nanobot.cli 里的 run
 [project.scripts]
 mini-nanobot = "mini_nanobot.cli:run"
 
+# 开发时才需要的依赖，不进正式运行；用 uv sync --group dev 安装
 [dependency-groups]
 dev = [
     "pytest",
@@ -30,12 +32,19 @@ dev = [
     "ruff",
 ]
 
+# 导入路径的根（""）对应磁盘上的 src，所以 from 第一层是 mini_nanobot
 [tool.setuptools]
 package-dir = {"" = "src"}
 
+# 在 src 下自动发现要安装的包（mini_nanobot 及其子包）
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# 只给 pytest 用：async 测试自动识别；跑测试时把 src 加入查找路径
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 pythonpath = ["src"]
+
+
+[tool.setuptools.package-data]
+mini_nanobot = ["workspace/memory/*.md"]
